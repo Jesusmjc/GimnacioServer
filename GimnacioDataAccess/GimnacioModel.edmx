@@ -1,0 +1,491 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="GimnacioModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Clases">
+          <Key>
+            <PropertyRef Name="IdClase" />
+          </Key>
+          <Property Name="IdClase" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="fecha" Type="datetime" />
+          <Property Name="cupoMaximo" Type="int" />
+          <Property Name="comentarios" Type="nvarchar" MaxLength="200" />
+          <Property Name="IdEntrenador" Type="int" />
+          <Property Name="tipo" Type="nvarchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="Membresias">
+          <Key>
+            <PropertyRef Name="IdMembresia" />
+          </Key>
+          <Property Name="IdMembresia" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="costoMensual" Type="money" />
+          <Property Name="descripcion" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Miembros">
+          <Key>
+            <PropertyRef Name="IdMiembro" />
+          </Key>
+          <Property Name="IdMiembro" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="fechaIngreso" Type="date" />
+          <Property Name="IdMembresia" Type="int" />
+        </EntityType>
+        <EntityType Name="MiembrosClases">
+          <Key>
+            <PropertyRef Name="IdMiembroClase" />
+          </Key>
+          <Property Name="IdMiembroClase" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdMiembro" Type="int" />
+          <Property Name="IdClase" Type="int" />
+        </EntityType>
+        <EntityType Name="Pagos">
+          <Key>
+            <PropertyRef Name="IdPago" />
+          </Key>
+          <Property Name="IdPago" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="cantidad" Type="money" />
+          <Property Name="motivo" Type="nvarchar" MaxLength="40" />
+          <Property Name="IdMiembro" Type="int" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="Usuarios">
+          <Key>
+            <PropertyRef Name="IdUsuario" />
+          </Key>
+          <Property Name="IdUsuario" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="tipo" Type="varchar" MaxLength="12" />
+          <Property Name="nombre" Type="nvarchar" MaxLength="30" />
+          <Property Name="apellidoPaterno" Type="nvarchar" MaxLength="20" />
+          <Property Name="apellidoMaterno" Type="nvarchar" MaxLength="20" />
+          <Property Name="correoElectronico" Type="nvarchar" MaxLength="50" />
+          <Property Name="IdMiembro" Type="int" />
+          <Property Name="contrasena" Type="nvarchar" MaxLength="64" />
+        </EntityType>
+        <Association Name="FK_Clase_Entrenador">
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="0..1" />
+          <End Role="Clases" Type="Self.Clases" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="IdUsuario" />
+            </Principal>
+            <Dependent Role="Clases">
+              <PropertyRef Name="IdEntrenador" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Miembro_Membresía">
+          <End Role="Membresias" Type="Self.Membresias" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Miembros" Type="Self.Miembros" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Membresias">
+              <PropertyRef Name="IdMembresia" />
+            </Principal>
+            <Dependent Role="Miembros">
+              <PropertyRef Name="IdMembresia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MiembroClase_Clase">
+          <End Role="Clases" Type="Self.Clases" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="MiembrosClases" Type="Self.MiembrosClases" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Clases">
+              <PropertyRef Name="IdClase" />
+            </Principal>
+            <Dependent Role="MiembrosClases">
+              <PropertyRef Name="IdClase" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MiembroClase_Miembro">
+          <End Role="Miembros" Type="Self.Miembros" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="MiembrosClases" Type="Self.MiembrosClases" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Miembros">
+              <PropertyRef Name="IdMiembro" />
+            </Principal>
+            <Dependent Role="MiembrosClases">
+              <PropertyRef Name="IdMiembro" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Pago_Miembro">
+          <End Role="Miembros" Type="Self.Miembros" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Pagos" Type="Self.Pagos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Miembros">
+              <PropertyRef Name="IdMiembro" />
+            </Principal>
+            <Dependent Role="Pagos">
+              <PropertyRef Name="IdMiembro" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Usuario_Miembro">
+          <End Role="Miembros" Type="Self.Miembros" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Miembros">
+              <PropertyRef Name="IdMiembro" />
+            </Principal>
+            <Dependent Role="Usuarios">
+              <PropertyRef Name="IdMiembro" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GimnacioModelStoreContainer">
+          <EntitySet Name="Clases" EntityType="Self.Clases" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Membresias" EntityType="Self.Membresias" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Miembros" EntityType="Self.Miembros" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MiembrosClases" EntityType="Self.MiembrosClases" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Pagos" EntityType="Self.Pagos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Clase_Entrenador" Association="Self.FK_Clase_Entrenador">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Clases" EntitySet="Clases" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Miembro_Membresía" Association="Self.FK_Miembro_Membresía">
+            <End Role="Membresias" EntitySet="Membresias" />
+            <End Role="Miembros" EntitySet="Miembros" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MiembroClase_Clase" Association="Self.FK_MiembroClase_Clase">
+            <End Role="Clases" EntitySet="Clases" />
+            <End Role="MiembrosClases" EntitySet="MiembrosClases" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MiembroClase_Miembro" Association="Self.FK_MiembroClase_Miembro">
+            <End Role="Miembros" EntitySet="Miembros" />
+            <End Role="MiembrosClases" EntitySet="MiembrosClases" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Pago_Miembro" Association="Self.FK_Pago_Miembro">
+            <End Role="Miembros" EntitySet="Miembros" />
+            <End Role="Pagos" EntitySet="Pagos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Usuario_Miembro" Association="Self.FK_Usuario_Miembro">
+            <End Role="Miembros" EntitySet="Miembros" />
+            <End Role="Usuarios" EntitySet="Usuarios" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="GimnacioModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Clases">
+          <Key>
+            <PropertyRef Name="IdClase" />
+          </Key>
+          <Property Name="IdClase" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="fecha" Type="DateTime" Precision="3" />
+          <Property Name="cupoMaximo" Type="Int32" />
+          <Property Name="comentarios" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="IdEntrenador" Type="Int32" />
+          <NavigationProperty Name="Usuarios" Relationship="Self.FK_Clase_Entrenador" FromRole="Clases" ToRole="Usuarios" />
+          <NavigationProperty Name="MiembrosClases" Relationship="Self.FK_MiembroClase_Clase" FromRole="Clases" ToRole="MiembrosClases" />
+          <Property Name="tipo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Membresias">
+          <Key>
+            <PropertyRef Name="IdMembresia" />
+          </Key>
+          <Property Name="IdMembresia" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="costoMensual" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="descripcion" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Miembros" Relationship="Self.FK_Miembro_Membresía" FromRole="Membresias" ToRole="Miembros" />
+        </EntityType>
+        <EntityType Name="Miembros">
+          <Key>
+            <PropertyRef Name="IdMiembro" />
+          </Key>
+          <Property Name="IdMiembro" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="fechaIngreso" Type="DateTime" Precision="0" />
+          <Property Name="IdMembresia" Type="Int32" />
+          <NavigationProperty Name="Membresias" Relationship="Self.FK_Miembro_Membresía" FromRole="Miembros" ToRole="Membresias" />
+          <NavigationProperty Name="MiembrosClases" Relationship="Self.FK_MiembroClase_Miembro" FromRole="Miembros" ToRole="MiembrosClases" />
+          <NavigationProperty Name="Pagos" Relationship="Self.FK_Pago_Miembro" FromRole="Miembros" ToRole="Pagos" />
+          <NavigationProperty Name="Usuarios" Relationship="Self.FK_Usuario_Miembro" FromRole="Miembros" ToRole="Usuarios" />
+        </EntityType>
+        <EntityType Name="MiembrosClases">
+          <Key>
+            <PropertyRef Name="IdMiembroClase" />
+          </Key>
+          <Property Name="IdMiembroClase" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdMiembro" Type="Int32" />
+          <Property Name="IdClase" Type="Int32" />
+          <NavigationProperty Name="Clases" Relationship="Self.FK_MiembroClase_Clase" FromRole="MiembrosClases" ToRole="Clases" />
+          <NavigationProperty Name="Miembros" Relationship="Self.FK_MiembroClase_Miembro" FromRole="MiembrosClases" ToRole="Miembros" />
+        </EntityType>
+        <EntityType Name="Pagos">
+          <Key>
+            <PropertyRef Name="IdPago" />
+          </Key>
+          <Property Name="IdPago" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="cantidad" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="motivo" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Name="IdMiembro" Type="Int32" />
+          <NavigationProperty Name="Miembros" Relationship="Self.FK_Pago_Miembro" FromRole="Pagos" ToRole="Miembros" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Usuarios">
+          <Key>
+            <PropertyRef Name="IdUsuario" />
+          </Key>
+          <Property Name="IdUsuario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="tipo" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="nombre" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="apellidoPaterno" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="apellidoMaterno" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="correoElectronico" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="IdMiembro" Type="Int32" />
+          <NavigationProperty Name="Clases" Relationship="Self.FK_Clase_Entrenador" FromRole="Usuarios" ToRole="Clases" />
+          <NavigationProperty Name="Miembros" Relationship="Self.FK_Usuario_Miembro" FromRole="Usuarios" ToRole="Miembros" />
+          <Property Name="contrasena" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_Clase_Entrenador">
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="0..1" />
+          <End Role="Clases" Type="Self.Clases" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Usuarios">
+              <PropertyRef Name="IdUsuario" />
+            </Principal>
+            <Dependent Role="Clases">
+              <PropertyRef Name="IdEntrenador" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MiembroClase_Clase">
+          <End Role="Clases" Type="Self.Clases" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="MiembrosClases" Type="Self.MiembrosClases" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Clases">
+              <PropertyRef Name="IdClase" />
+            </Principal>
+            <Dependent Role="MiembrosClases">
+              <PropertyRef Name="IdClase" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Miembro_Membresía">
+          <End Role="Membresias" Type="Self.Membresias" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Miembros" Type="Self.Miembros" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Membresias">
+              <PropertyRef Name="IdMembresia" />
+            </Principal>
+            <Dependent Role="Miembros">
+              <PropertyRef Name="IdMembresia" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MiembroClase_Miembro">
+          <End Role="Miembros" Type="Self.Miembros" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="MiembrosClases" Type="Self.MiembrosClases" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Miembros">
+              <PropertyRef Name="IdMiembro" />
+            </Principal>
+            <Dependent Role="MiembrosClases">
+              <PropertyRef Name="IdMiembro" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Pago_Miembro">
+          <End Role="Miembros" Type="Self.Miembros" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Pagos" Type="Self.Pagos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Miembros">
+              <PropertyRef Name="IdMiembro" />
+            </Principal>
+            <Dependent Role="Pagos">
+              <PropertyRef Name="IdMiembro" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Usuario_Miembro">
+          <End Role="Miembros" Type="Self.Miembros" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Miembros">
+              <PropertyRef Name="IdMiembro" />
+            </Principal>
+            <Dependent Role="Usuarios">
+              <PropertyRef Name="IdMiembro" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GimnacioEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Clases" EntityType="Self.Clases" />
+          <EntitySet Name="Membresias" EntityType="Self.Membresias" />
+          <EntitySet Name="Miembros" EntityType="Self.Miembros" />
+          <EntitySet Name="MiembrosClases" EntityType="Self.MiembrosClases" />
+          <EntitySet Name="Pagos" EntityType="Self.Pagos" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="Usuarios" EntityType="Self.Usuarios" />
+          <AssociationSet Name="FK_Clase_Entrenador" Association="Self.FK_Clase_Entrenador">
+            <End Role="Usuarios" EntitySet="Usuarios" />
+            <End Role="Clases" EntitySet="Clases" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MiembroClase_Clase" Association="Self.FK_MiembroClase_Clase">
+            <End Role="Clases" EntitySet="Clases" />
+            <End Role="MiembrosClases" EntitySet="MiembrosClases" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Miembro_Membresía" Association="Self.FK_Miembro_Membresía">
+            <End Role="Membresias" EntitySet="Membresias" />
+            <End Role="Miembros" EntitySet="Miembros" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MiembroClase_Miembro" Association="Self.FK_MiembroClase_Miembro">
+            <End Role="Miembros" EntitySet="Miembros" />
+            <End Role="MiembrosClases" EntitySet="MiembrosClases" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Pago_Miembro" Association="Self.FK_Pago_Miembro">
+            <End Role="Miembros" EntitySet="Miembros" />
+            <End Role="Pagos" EntitySet="Pagos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Usuario_Miembro" Association="Self.FK_Usuario_Miembro">
+            <End Role="Miembros" EntitySet="Miembros" />
+            <End Role="Usuarios" EntitySet="Usuarios" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="GimnacioModelStoreContainer" CdmEntityContainer="GimnacioEntities">
+          <EntitySetMapping Name="Clases">
+            <EntityTypeMapping TypeName="GimnacioModel.Clases">
+              <MappingFragment StoreEntitySet="Clases">
+                <ScalarProperty Name="tipo" ColumnName="tipo" />
+                <ScalarProperty Name="IdClase" ColumnName="IdClase" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+                <ScalarProperty Name="cupoMaximo" ColumnName="cupoMaximo" />
+                <ScalarProperty Name="comentarios" ColumnName="comentarios" />
+                <ScalarProperty Name="IdEntrenador" ColumnName="IdEntrenador" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Membresias">
+            <EntityTypeMapping TypeName="GimnacioModel.Membresias">
+              <MappingFragment StoreEntitySet="Membresias">
+                <ScalarProperty Name="IdMembresia" ColumnName="IdMembresia" />
+                <ScalarProperty Name="costoMensual" ColumnName="costoMensual" />
+                <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Miembros">
+            <EntityTypeMapping TypeName="GimnacioModel.Miembros">
+              <MappingFragment StoreEntitySet="Miembros">
+                <ScalarProperty Name="IdMiembro" ColumnName="IdMiembro" />
+                <ScalarProperty Name="fechaIngreso" ColumnName="fechaIngreso" />
+                <ScalarProperty Name="IdMembresia" ColumnName="IdMembresia" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MiembrosClases">
+            <EntityTypeMapping TypeName="GimnacioModel.MiembrosClases">
+              <MappingFragment StoreEntitySet="MiembrosClases">
+                <ScalarProperty Name="IdMiembroClase" ColumnName="IdMiembroClase" />
+                <ScalarProperty Name="IdMiembro" ColumnName="IdMiembro" />
+                <ScalarProperty Name="IdClase" ColumnName="IdClase" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Pagos">
+            <EntityTypeMapping TypeName="GimnacioModel.Pagos">
+              <MappingFragment StoreEntitySet="Pagos">
+                <ScalarProperty Name="IdPago" ColumnName="IdPago" />
+                <ScalarProperty Name="cantidad" ColumnName="cantidad" />
+                <ScalarProperty Name="motivo" ColumnName="motivo" />
+                <ScalarProperty Name="IdMiembro" ColumnName="IdMiembro" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="GimnacioModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Usuarios">
+            <EntityTypeMapping TypeName="GimnacioModel.Usuarios">
+              <MappingFragment StoreEntitySet="Usuarios">
+                <ScalarProperty Name="contrasena" ColumnName="contrasena" />
+                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+                <ScalarProperty Name="tipo" ColumnName="tipo" />
+                <ScalarProperty Name="nombre" ColumnName="nombre" />
+                <ScalarProperty Name="apellidoPaterno" ColumnName="apellidoPaterno" />
+                <ScalarProperty Name="apellidoMaterno" ColumnName="apellidoMaterno" />
+                <ScalarProperty Name="correoElectronico" ColumnName="correoElectronico" />
+                <ScalarProperty Name="IdMiembro" ColumnName="IdMiembro" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
