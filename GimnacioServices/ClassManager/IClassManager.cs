@@ -14,6 +14,9 @@ namespace GimnacioServices
     {
         [OperationContract]
         int RegisterClass(Class newClass);
+
+        [OperationContract]
+        int ValidateDateIsAvailable(DateTime classDateTime);
     }
 
     [DataContract]
@@ -24,6 +27,9 @@ namespace GimnacioServices
 
         [DataMember]
         public DateTime Date;
+
+        [DataMember]
+        public TimeSpan Time;
 
         [DataMember]
         public int Capacity;

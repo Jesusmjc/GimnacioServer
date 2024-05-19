@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Data.Entity.Core;
 using System.Data.Entity.Validation;
 using System.Data.SqlClient;
+using System.ServiceModel;
+using System.Data.Entity.Core.Metadata.Edm;
 
 namespace GimnacioServices
 {
@@ -38,8 +40,36 @@ namespace GimnacioServices
             catch (Exception ex) when (ex is SqlException | ex is DbEntityValidationException | ex is EntityException)
             {
                 Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.InnerException);
                 return -1;
             }
+        }
+
+        public int ValidateDateIsAvailable(DateTime classDateTime)
+        {
+            int result = 0;
+
+            try
+            {
+                using (var context = new GimnacioEntities())
+                {
+                    var classOnSameDate = context.Clases.Any(c => c.fecha == classDateTime);
+
+
+                    if (classOnSameDate != null)
+                    {
+                        result = 1;
+                    }
+                }
+
+                return result;
+            }
+            catch (Exception ex) when (ex is SqlException | ex is DbEntityValidationException | ex is EntityException)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.InnerException.ToString());
+                return -1;
+            }         
         }
     }
 }

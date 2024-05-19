@@ -30,7 +30,6 @@ namespace GimnacioDataAccess
         public virtual DbSet<Miembros> Miembros { get; set; }
         public virtual DbSet<MiembrosClases> MiembrosClases { get; set; }
         public virtual DbSet<Pagos> Pagos { get; set; }
-        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<Usuarios> Usuarios { get; set; }
     }
 }
