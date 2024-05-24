@@ -47,5 +47,36 @@ namespace GimnacioServices
 
             return user;
         }
+
+        public User GetUserById(int id)
+        {
+            User user = new User();
+
+            try
+            {
+                using (var context = new GimnacioEntities())
+                {
+                    var userFromDB = context.Usuarios.Where(usuario => usuario.IdUsuario == id).FirstOrDefault();
+
+                    if (userFromDB != null)
+                    {
+                        user.UserId = userFromDB.IdUsuario;
+                        user.Type = userFromDB.tipo;
+                        user.Name = userFromDB.nombre;
+                        user.MiddleName = userFromDB.apellidoPaterno;
+                        user.LastName = userFromDB.apellidoMaterno;
+                        user.Email = userFromDB.correoElectronico;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.InnerException.ToString());
+                user = null;
+            }
+
+            return user;
+        }
     }
 }

@@ -17,6 +17,18 @@ namespace GimnacioServices
 
         [OperationContract]
         int ValidateDateIsAvailable(DateTime classDateTime);
+      
+        [OperationContract]
+        List<Class> GetClasses();
+
+        [OperationContract]
+        List<Class> GetBookClassesByMember(int IdMember);
+
+        [OperationContract]
+        int GetTotalAssistantsToClass(int IdClass);
+
+        [OperationContract]
+        int BookClass(int classId, int idMember); 
     }
 
     [DataContract]
