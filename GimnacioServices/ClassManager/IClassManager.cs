@@ -16,6 +16,9 @@ namespace GimnacioServices
         int RegisterClass(Class newClass);
 
         [OperationContract]
+        int ValidateDateIsAvailable(DateTime classDateTime);
+      
+        [OperationContract]
         List<Class> GetClasses();
 
         [OperationContract]
@@ -36,6 +39,9 @@ namespace GimnacioServices
 
         [DataMember]
         public DateTime Date;
+
+        [DataMember]
+        public TimeSpan Time;
 
         [DataMember]
         public int Capacity;

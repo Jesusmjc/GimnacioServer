@@ -1,3 +1,8 @@
+
+﻿// T4 code generation is enabled for model 'C:\Users\jesus\GitHub\GimnacioServer\GimnacioDataAccess\GimnacioModel.edmx'. 
+// To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
+// property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
+// is open in the designer.
 ﻿// La generación de código T4 está habilitada para el modelo 'C:\Users\Armando Reyes\OneDrive\Documentos\UV\6TO SEMESTRE\Procesos\Proyecto\Servidor\GimnacioServer\GimnacioDataAccess\GimnacioModel.edmx'. 
 // Para habilitar la generación de código heredada, cambie el valor de la propiedad del diseñador 'Estrategia de generación de código'
 // por 'ObjectContext heredado'. Esta propiedad está disponible en la ventana Propiedades cuando se abre

@@ -31,6 +31,10 @@ namespace GimnacioServices
                         user.MiddleName = userFromDB.apellidoPaterno;
                         user.LastName = userFromDB.apellidoMaterno;
                         user.Email = userFromDB.correoElectronico;
+                    } 
+                    else
+                    {
+                        user.UserId = 0;
                     }
                 }
             }
@@ -38,7 +42,7 @@ namespace GimnacioServices
             {
                 Console.WriteLine(ex.Message);
                 Console.WriteLine(ex.InnerException.ToString());
-                user = null;
+                user.UserId = -1;
             }
 
             return user;
