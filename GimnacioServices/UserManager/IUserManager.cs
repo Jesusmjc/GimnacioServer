@@ -13,6 +13,9 @@ namespace GimnacioServices
     {
         [OperationContract]
         User GetUser(string email, string password);
+
+        [OperationContract]
+        User GetUserById(int id); 
     }
 
     [DataContract]
