@@ -53,8 +53,7 @@ namespace GimnacioServices
             {
                 using (var context = new GimnacioEntities())
                 {
-                    var classOnSameDate = context.Clases.Any(c => c.fecha == classDateTime);
-
+                    Clases classOnSameDate = context.Clases.Where(c => c.fecha == classDateTime).FirstOrDefault();
 
                     if (classOnSameDate != null)
                     {
